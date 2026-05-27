@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수련회 준비물 체크리스트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fef6ec; --bg-2: #fbe9d2; --card: #ffffff;
+    --ink: #3a3128; --ink-soft: #7c6f5d; --ink-faint: #a8997f;
+    --line: #f0ddc2; --orange: #e88a3c; --orange-deep: #c86f24;
+    --teal: #3f9986; --berry: #c25775; --shadow: rgba(110, 75, 25, 0.15);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Gowun Dodum', sans-serif; background: var(--bg);
+    color: var(--ink); line-height: 1.7; -webkit-tap-highlight-color: transparent;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(circle at 12% 6%, rgba(232,138,60,0.10), transparent 40%),
+      radial-gradient(circle at 90% 8%, rgba(63,153,134,0.09), transparent 40%);
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 16px 90px; position: relative; z-index: 1; }
+  header { text-align: center; padding: 44px 14px 18px; }
+  .badge {
+    display: inline-block; font-family: 'Jua', sans-serif;
+    background: var(--orange); color: #fff; font-size: 0.9rem;
+    padding: 4px 16px; border-radius: 16px; margin-bottom: 12px;
+  }
+  h1 { font-family: 'Jua', sans-serif; font-size: 2.3rem; }
+  .theme { font-family: 'Jua', sans-serif; color: var(--orange-deep); font-size: 0.95rem; margin-top: 2px; }
+  .tagline { color: var(--ink-soft); font-size: 0.95rem; margin-top: 4px; }
+
+  /* 진행률 */
+  .progress-card {
+    background: var(--card); border: 2px solid var(--line);
+    border-radius: 14px; padding: 16px 18px; margin: 22px 0 18px;
+    box-shadow: 0 3px 10px var(--shadow);
+  }
+  .progress-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .progress-label { font-family: 'Jua', sans-serif; font-size: 1.05rem; }
+  .progress-pct { font-family: 'Jua', sans-serif; font-size: 1.4rem; color: var(--orange-deep); }
+  .progress-track { background: var(--bg-2); border-radius: 20px; height: 14px; overflow: hidden; }
+  .progress-fill {
+    height: 100%; border-radius: 20px;
+    background: linear-gradient(90deg, var(--orange), var(--teal));
+    transition: width 0.5s ease;
+  }
+
+  /* 탭 */
+  .tabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; }
+  .tab {
+    font-family: 'Jua', sans-serif; font-size: 0.98rem;
+    padding: 10px 22px; border: 2px solid var(--line); border-radius: 22px;
+    background: var(--card); color: var(--ink-soft); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab:hover { border-color: var(--orange); }
+  .tab.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fade 0.3s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .note {
+    background: var(--bg-2); border-radius: 10px; padding: 11px 15px;
+    margin-bottom: 16px; font-size: 0.88rem; color: var(--ink-soft);
+  }
+
+  /* 카테고리 */
+  .cat-group { margin-bottom: 18px; }
+  .cat-head {
+    font-family: 'Jua', sans-serif; font-size: 1.05rem;
+    margin-bottom: 8px; display: flex; align-items: center; gap: 7px;
+  }
+  .cat-head .cat-icon { font-size: 1.2rem; }
+  .cat-head .cat-count { font-size: 0.82rem; color: var(--ink-faint); font-family: 'Gowun Dodum',sans-serif; }
+
+  .item {
+    background: var(--card); border: 2px solid var(--line);
+    border-radius: 11px; margin-bottom: 7px; transition: all 0.14s;
+  }
+  .item:hover { border-color: var(--orange); }
+  .item.checked { background: #f3f8f2; border-color: var(--teal); }
+  .item-main {
+    padding: 11px 14px; display: flex; align-items: center; gap: 11px;
+  }
+  .checkbox {
+    width: 24px; height: 24px; border: 2.5px solid var(--line);
+    border-radius: 7px; flex-shrink: 0; display: flex;
+    align-items: center; justify-content: center; font-size: 0.9rem;
+    transition: all 0.14s; cursor: pointer;
+  }
+  .item.checked .checkbox { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .item-name { flex: 1; font-size: 0.97rem; cursor: pointer; }
+  .item.checked .item-name { color: var(--ink-faint); text-decoration: line-through; }
+  .item-detail-badge {
+    font-size: 0.74rem; color: var(--ink-soft); background: var(--bg-2);
+    padding: 1px 8px; border-radius: 8px; cursor: pointer;
+  }
+  .detail-toggle {
+    background: none; border: none; color: var(--ink-faint);
+    cursor: pointer; font-size: 0.8rem; padding: 2px 6px;
+  }
+  .detail-toggle:hover { color: var(--orange); }
+  .item-del {
+    background: none; border: none; color: var(--ink-faint);
+    cursor: pointer; font-size: 0.85rem;
+  }
+  .item-del:hover { color: var(--berry); }
+  /* 세부사항 패널 */
+  .item-detail {
+    display: none; padding: 0 14px 12px 49px;
+  }
+  .item-detail.open { display: block; }
+  .item-detail textarea {
+    width: 100%; font-family: 'Gowun Dodum', sans-serif; font-size: 0.88rem;
+    border: 1.5px solid var(--line); border-radius: 8px;
+    padding: 8px 10px; background: var(--bg); color: var(--ink);
+    resize: vertical; min-height: 48px; line-height: 1.6;
+  }
+  .item-detail textarea:focus { outline: none; border-color: var(--orange); }
+  .item-detail .detail-hint {
+    font-size: 0.76rem; color: var(--ink-faint); margin-bottom: 4px;
+  }
+
+  /* 항목 추가 */
+  .add-row {
+    display: flex; gap: 7px; margin-top: 8px;
+  }
+  .add-row select, .add-row input {
+    font-family: 'Gowun Dodum', sans-serif; font-size: 0.92rem;
+    border: 2px solid var(--line); border-radius: 8px;
+    padding: 8px 10px; background: var(--card); color: var(--ink);
+  }
+  .add-row input { flex: 1; }
+  .add-row input:focus, .add-row select:focus { outline: none; border-color: var(--orange); }
+  .add-row button {
+    font-family: 'Jua', sans-serif; font-size: 0.9rem;
+    padding: 8px 16px; border: none; border-radius: 8px;
+    background: var(--orange); color: #fff; cursor: pointer;
+  }
+  .add-row button:hover { background: var(--orange-deep); }
+
+  .toolbar { display: flex; gap: 8px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+  .btn {
+    font-family: 'Jua', sans-serif; font-size: 0.85rem;
+    padding: 8px 15px; border: 2px solid var(--line); border-radius: 9px;
+    background: var(--card); color: var(--ink); cursor: pointer;
+    transition: all 0.14s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.danger { color: var(--berry); border-color: var(--berry); }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(90px);
+    background: var(--ink); color: #fff; font-family: 'Jua', sans-serif;
+    font-size: 0.93rem; padding: 11px 24px; border-radius: 22px; z-index: 200;
+    transition: transform 0.32s cubic-bezier(0.2,0,0.2,1);
+    box-shadow: 0 8px 20px var(--shadow);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  footer {
+    text-align: center; margin-top: 36px; padding-top: 20px;
+    border-top: 2px dashed var(--line); color: var(--ink-faint);
+    font-family: 'Jua', sans-serif; font-size: 0.85rem;
+  }
+  @media print {
+    .tabs, .add-row, .toolbar, .toast, .progress-card, .detail-toggle, .item-del { display: none !important; }
+    .panel { display: block !important; }
+    .item { break-inside: avoid; }
+    .item-detail { display: block !important; }
+    .item-detail textarea { border: none; background: transparent; }
+  }
+  @media (max-width: 600px) { h1 { font-size: 2rem; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="badge">PACKING CHECKLIST</div>
+    <h1>준비물 체크리스트</h1>
+    <div class="theme">하나님 나라, 하나님의 방식으로</div>
+    <p class="tagline">빠뜨린 것 없이 — 공동·개인 준비물을 챙겨요</p>
+  </header>
+
+  <div class="progress-card">
+    <div class="progress-top">
+      <span class="progress-label" id="prog-label">준비 진행률</span>
+      <span class="progress-pct" id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-panel="common">공동 준비물</button>
+    <button class="tab" data-panel="personal">개인 준비물</button>
+  </div>
+
+  <!-- 공동 준비물 -->
+  <div class="panel active" id="panel-common">
+    <div class="note">교회·교사가 함께 챙기는 준비물이에요. 담당자가 확인하며 체크하세요.</div>
+    <div id="common-list"></div>
+    <div class="add-row">
+      <select id="common-cat"></select>
+      <input type="text" id="common-input" placeholder="준비물 추가...">
+      <button onclick="addItem('common')">추가</button>
+    </div>
+  </div>
+
+  <!-- 개인 준비물 -->
+  <div class="panel" id="panel-personal">
+    <div class="note">학생 각자가 챙겨야 할 준비물이에요. 인쇄해서 나눠주거나 단톡방에 공유하세요.</div>
+    <div id="personal-list"></div>
+    <div class="add-row">
+      <select id="personal-cat"></select>
+      <input type="text" id="personal-input" placeholder="준비물 추가...">
+      <button onclick="addItem('personal')">추가</button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn" onclick="window.print()">🖨️ 인쇄</button>
+    <button class="btn" onclick="uncheckAll()">체크 모두 해제</button>
+    <button class="btn danger" onclick="resetAll()">기본값으로 초기화</button>
+  </div>
+
+  <footer>수련회 준비물 체크리스트 — 하나님 나라, 하나님의 방식으로</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================
+// 데이터
+// ============================================
+const STORE = 'retreat_packing';
+
+const CATEGORIES = {
+  common: {
+    '예배·프로그램': ['음향 장비 (마이크·스피커)', '노트북·빔프로젝터', '찬양 PPT·악보', '공과 교재', '레크리에이션 도구', '상품·시상품'],
+    '안전·의료': ['구급함', '비상약', '손소독제·마스크', '비상 연락망 명단', '소화기 위치 확인'],
+    '생활·식사': ['식자재', '취사 도구', '정수기·생수', '쓰레기봉투', '청소 도구'],
+    '행정': ['참가자 명단', '방 배정표', '일정표 출력본', '현수막·표지판']
+  },
+  personal: {
+    '필수': ['성경·필기구', '세면도구', '수건', '갈아입을 옷', '속옷·양말', '잠옷'],
+    '위생·건강': ['개인 상비약', '마스크', '여벌 마스크', '물통'],
+    '편의': ['슬리퍼', '담요·여벌 외투', '충전기', '모자·자외선 차단제'],
+    '마음': ['기대하는 마음', '함께하려는 마음']
+  }
+};
+
+const CAT_ICONS = {
+  '예배·프로그램': '🎤', '안전·의료': '🩹', '생활·식사': '🍚', '행정': '📋',
+  '필수': '🎒', '위생·건강': '🧼', '편의': '🧴', '마음': '💛'
+};
+
+let data = load();
+
+function buildDefault() {
+  const d = { common: [], personal: [] };
+  ['common', 'personal'].forEach(scope => {
+    Object.entries(CATEGORIES[scope]).forEach(([cat, items]) => {
+      items.forEach(name => {
+        d[scope].push({ id: uid(), cat, name, checked: false });
+      });
+    });
+  });
+  return d;
+}
+function load() {
+  try {
+    const v = JSON.parse(localStorage.getItem(STORE));
+    if (v && v.common) return v;
+  } catch (e) {}
+  return buildDefault();
+}
+function save() {
+  try { localStorage.setItem(STORE, JSON.stringify(data)); } catch (e) {}
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function uid() { return 'p' + Date.now() + Math.floor(Math.random() * 9999); }
+
+// ============================================
+// 탭
+// ============================================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+  });
+});
+
+// ============================================
+// 렌더링
+// ============================================
+function renderScope(scope) {
+  const items = data[scope];
+  const listEl = document.getElementById(scope + '-list');
+  // 카테고리별 그룹
+  const cats = Object.keys(CATEGORIES[scope]);
+  // 사용자 추가 항목이 새 카테고리일 수도 있으니 보강
+  items.forEach(it => { if (!cats.includes(it.cat)) cats.push(it.cat); });
+
+  let html = '';
+  cats.forEach(cat => {
+    const catItems = items.filter(it => it.cat === cat);
+    if (catItems.length === 0) return;
+    const done = catItems.filter(it => it.checked).length;
+    html += `
+      <div class="cat-group">
+        <div class="cat-head">
+          <span class="cat-icon">${CAT_ICONS[cat] || '📦'}</span>
+          <span>${esc(cat)}</span>
+          <span class="cat-count">${done}/${catItems.length}</span>
+        </div>` +
+      catItems.map(it => {
+        const hasDetail = it.detail && it.detail.trim();
+        return `
+        <div class="item ${it.checked ? 'checked' : ''}">
+          <div class="item-main">
+            <div class="checkbox" onclick="toggleItem('${scope}','${it.id}')">${it.checked ? '✓' : ''}</div>
+            <span class="item-name" onclick="toggleItem('${scope}','${it.id}')">${esc(it.name)}</span>
+            ${hasDetail ? '<span class="item-detail-badge" onclick="toggleDetail(\'' + it.id + '\')">📝 메모</span>' : ''}
+            <button class="detail-toggle" onclick="toggleDetail('${it.id}')">＋세부</button>
+            <button class="item-del" onclick="removeItem('${scope}','${it.id}')">✕</button>
+          </div>
+          <div class="item-detail" id="detail-${it.id}">
+            <div class="detail-hint">수량, 담당자, 보관 장소 등 세부사항을 적어두세요</div>
+            <textarea data-detail="${scope}|${it.id}"
+              placeholder="예: 2박스 / 김교사 담당 / 차량 트렁크에 보관">${esc(it.detail || '')}</textarea>
+          </div>
+        </div>`; }).join('') +
+      `</div>`;
+  });
+  listEl.innerHTML = html;
+
+  // 세부사항 textarea 입력 저장 + 펼침 상태 유지
+  listEl.querySelectorAll('textarea[data-detail]').forEach(ta => {
+    ta.addEventListener('input', () => {
+      const [sc, id] = ta.dataset.detail.split('|');
+      const item = data[sc].find(x => x.id === id);
+      if (item) { item.detail = ta.value; save(); }
+    });
+  });
+  // 열려있던 세부사항 패널 복원
+  openDetails.forEach(id => {
+    const el = document.getElementById('detail-' + id);
+    if (el) el.classList.add('open');
+  });
+
+  // 카테고리 셀렉트 채우기
+  const sel = document.getElementById(scope + '-cat');
+  if (sel.options.length === 0) {
+    sel.innerHTML = Object.keys(CATEGORIES[scope])
+      .map(c => `<option value="${c}">${c}</option>`).join('');
+  }
+}
+
+function renderProgress() {
+  const all = [...data.common, ...data.personal];
+  const total = all.length;
+  const done = all.filter(it => it.checked).length;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent =
+    '준비 진행률 (' + done + '/' + total + ')';
+}
+
+function renderAll() {
+  renderScope('common');
+  renderScope('personal');
+  renderProgress();
+}
+
+// ============================================
+// 동작
+// ============================================
+function toggleItem(scope, id) {
+  const it = data[scope].find(x => x.id === id);
+  if (!it) return;
+  it.checked = !it.checked;
+  save();
+  renderAll();
+}
+
+// 펼쳐진 세부사항 패널 추적
+const openDetails = new Set();
+function toggleDetail(id) {
+  const el = document.getElementById('detail-' + id);
+  if (!el) return;
+  if (el.classList.contains('open')) {
+    el.classList.remove('open');
+    openDetails.delete(id);
+  } else {
+    el.classList.add('open');
+    openDetails.add(id);
+  }
+}
+
+function addItem(scope) {
+  const input = document.getElementById(scope + '-input');
+  const cat = document.getElementById(scope + '-cat').value;
+  const name = input.value.trim();
+  if (!name) { toast('준비물 이름을 입력해주세요'); return; }
+  data[scope].push({ id: uid(), cat, name, checked: false });
+  save();
+  input.value = '';
+  renderAll();
+  toast('준비물을 추가했어요');
+}
+
+function removeItem(scope, id) {
+  data[scope] = data[scope].filter(x => x.id !== id);
+  save();
+  renderAll();
+  toast('준비물을 삭제했어요');
+}
+
+function uncheckAll() {
+  if (!confirm('체크를 모두 해제할까요?')) return;
+  [...data.common, ...data.personal].forEach(it => it.checked = false);
+  save();
+  renderAll();
+  toast('체크를 모두 해제했어요');
+}
+
+function resetAll() {
+  if (!confirm('준비물 목록을 기본값으로 되돌릴까요? 추가·삭제한 항목이 사라져요.')) return;
+  data = buildDefault();
+  save();
+  renderAll();
+  toast('기본 목록으로 초기화했어요');
+}
+
+// ============================================
+// 초기화
+// ============================================
+renderAll();
+</script>
+</body>
+</html>
